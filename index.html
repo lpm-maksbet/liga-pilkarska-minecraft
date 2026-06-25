@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Liga Piłkarska Minecraft</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+overflow:hidden;
+background:#000;
+font-family:Arial,Helvetica,sans-serif;
+color:white;
+}
+
+/* LOADING */
+
+#loader{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:url("loading.jpg") center center/cover no-repeat;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:9999;
+}
+
+#loader::before{
+content:"";
+position:absolute;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.55);
+}
+
+#loader img{
+width:260px;
+z-index:2;
+animation:pulse 2s infinite;
+}
+
+.loadingText{
+z-index:2;
+margin-top:20px;
+font-size:20px;
+letter-spacing:5px;
+color:#e0e0e0;
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.05);}
+100%{transform:scale(1);}
+}
+
+/* APP */
+
+#app{
+display:none;
+height:100vh;
+background:url("background.jpg") center center/cover no-repeat;
+position:relative;
+}
+
+#app::before{
+content:"";
+position:absolute;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.20);
+z-index:0;
+}
+
+/* HEADER */
+
+.header{
+position:relative;
+z-index:2;
+text-align:center;
+padding:20px;
+background:rgba(0,0,0,.30);
+backdrop-filter:blur(6px);
+border-bottom:1px solid rgba(255,255,255,.12);
+}
+
+.ribbon{
+width:65px;
+display:block;
+margin:auto;
+margin-bottom:15px;
+opacity:.95;
+}
+
+.header h1{
+
+font-family:Georgia,"Times New Roman",serif;
+
+font-size:64px;
+
+font-weight:normal;
+
+letter-spacing:8px;
+
+text-transform:uppercase;
+
+color:#ededed;
+
+display:inline-block;
+
+padding:15px 0;
+
+position:relative;
+
+text-shadow:
+0 0 10px rgba(255,255,255,.15),
+0 0 25px rgba(255,255,255,.10);
+
+}
+
+.header h1::before,
+.header h1::after{
+
+content:"";
+
+position:absolute;
+
+left:-80px;
+right:-80px;
+
+height:1px;
+
+background:rgba(255,255,255,.20);
+
+}
+
+.header h1::before{
+top:0;
+}
+
+.header h1::after{
+bottom:0;
+}
+
+.header h2{
+
+margin-top:18px;
+
+font-size:20px;
+
+letter-spacing:8px;
+
+font-weight:300;
+
+color:#bdbdbd;
+
+text-transform:uppercase;
+
+}
+
+/* MENU */
+
+.menu{
+position:relative;
+z-index:2;
+display:flex;
+justify-content:center;
+gap:20px;
+padding:18px;
+}
+
+.menu button{
+
+background:rgba(25,25,25,.75);
+
+color:white;
+
+border:none;
+
+padding:15px 28px;
+
+font-size:17px;
+
+border-radius:10px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.menu button:hover{
+
+background:rgba(70,70,70,.85);
+
+transform:translateY(-3px);
+
+}
+
+/* CONTENT */
+
+.content{
+position:relative;
+z-index:2;
+height:calc(100vh - 240px);
+overflow:hidden;
+}
+
+.tab{
+
+position:absolute;
+
+width:100%;
+height:100%;
+
+display:flex;
+
+justify-content:center;
+align-items:center;
+flex-direction:column;
+
+opacity:0;
+transform:translateX(100%);
+transition:.6s;
+
+background-size:cover;
+background-position:center;
+
+}
+
+.active{
+opacity:1;
+transform:translateX(0);
+}
+
+.tabela{
+background:url("tabela.jpg") center center/cover;
+}
+
+.terminarz{
+background:url("terminarz.jpg") center center/cover;
+}
+
+.wyniki{
+background:url("wyniki.jpg") center center/cover;
+}
+
+.overlay{
+position:absolute;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.08);
+}
+
+.text{
+position:relative;
+z-index:5;
+text-align:center;
+}
+
+.big{
+font-size:72px;
+font-weight:700;
+text-shadow:
+0 0 10px black,
+0 0 20px black,
+0 0 30px black;
+}
+
+.small{
+font-size:28px;
+margin-top:20px;
+color:#e5e5e5;
+text-shadow:
+0 0 10px black,
+0 0 20px black;
+}
+
+.footer{
+position:absolute;
+bottom:15px;
+width:100%;
+text-align:center;
+font-size:14px;
+color:#d0d0d0;
+z-index:5;
+letter-spacing:2px;
+}
+
+/* ANIMACJA */
+
+.fadeIn{
+animation:fadeIn .8s;
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="loader">
+
+<img src="logo.png">
+
+<div class="loadingText">
+ŁADOWANIE...
+</div>
+
+</div>
+
+<div id="app">
+
+<div class="header">
+
+<img src="ribbon.png" class="ribbon">
+
+<h1>NA ZAWSZE W NASZEJ PAMIĘCI</h1>
+
+<h2>
+LIGA PIŁKARSKA MINECRAFT
+</h2>
+
+</div>
+
+<div class="menu">
+
+<button onclick="showTab(0)">Tabela</button>
+
+<button onclick="showTab(1)">Terminarz</button>
+
+<button onclick="showTab(2)">Wyniki</button>
+
+<button onclick="exitPage()">Wyjście</button>
+
+</div>
+
+<div class="content">
+
+<div class="tab tabela active">
+
+<div class="overlay"></div>
+
+<div class="text fadeIn">
+
+<div class="big">
+Brak dostępnych drużyn
+</div>
+
+<div class="small">
+Tabela ligowa będzie dostępna wkrótce
+</div>
+
+</div>
+
+</div>
+
+<div class="tab terminarz">
+
+<div class="overlay"></div>
+
+<div class="text">
+
+<div class="big">
+Brak dostępnych meczy
+</div>
+
+<div class="small">
+Terminarz nie został jeszcze dodany
+</div>
+
+</div>
+
+</div>
+
+<div class="tab wyniki">
+
+<div class="overlay"></div>
+
+<div class="text">
+
+<div class="big">
+Brak wyników
+</div>
+
+<div class="small">
+Nie ma jeszcze rozegranych spotkań
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+Liga Piłkarska Minecraft
+</div>
+
+</div>
+
+<script>
+
+setTimeout(()=>{
+
+document.getElementById("loader").style.opacity="0";
+
+setTimeout(()=>{
+
+document.getElementById("loader").style.display="none";
+document.getElementById("app").style.display="block";
+
+},1000);
+
+},3000);
+
+const tabs=document.querySelectorAll(".tab");
+
+function showTab(index){
+
+tabs.forEach(tab=>{
+
+tab.classList.remove("active");
+
+});
+
+setTimeout(()=>{
+
+tabs[index].classList.add("active");
+
+},100);
+
+}
+
+function exitPage(){
+
+if(confirm("Czy na pewno chcesz opuścić stronę?")){
+
+window.close();
+
+history.back();
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
