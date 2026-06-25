@@ -1,6 +1,10 @@
 <!doctype html>
 <html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Super Liga v3</title>
+<title>Super Liga v3
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<link rel="apple-touch-icon" href="icon-192.png">
+</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}body{font-family:Poppins,sans-serif;background:#000;color:#fff;overflow:hidden}
@@ -26,6 +30,31 @@ footer{text-align:center;padding:18px;opacity:.9}
 .box{background:#171717;border:1px solid #555;border-radius:16px;padding:25px;max-width:330px;text-align:center}
 .box .b{display:flex;gap:10px;justify-content:center;margin-top:20px}
 @media(max-width:700px){header{font-size:28px}.mem h2{font-size:28px}th,td{font-size:12px;padding:6px}}
+
+.rank{display:inline-flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;font-weight:700}
+.r1{background:#22c55e;box-shadow:0 0 12px #22c55e}
+.r2{background:#a855f7;box-shadow:0 0 12px #a855f7}
+.r3{background:#ef4444;box-shadow:0 0 12px #ef4444}
+.rank:hover{transform:scale(1.15);transition:.25s}
+.leaders{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:20px}
+.leader{background:#1b1b1b;border:1px solid #444;border-radius:16px;padding:18px;text-align:center;cursor:pointer;transition:.3s}
+.leader:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 0 18px #888}
+.details{max-height:0;overflow:hidden;transition:max-height .35s}
+.leader.open .details{max-height:120px}
+@media(max-width:700px){table{display:block;overflow-x:auto;white-space:nowrap}}
+
+
+.pos{display:inline-flex;width:30px;height:30px;border-radius:50%;align-items:center;justify-content:center;font-weight:700;transition:.25s}
+.pos:hover{transform:translateY(-4px) scale(1.15)}
+.g{background:#22c55e;box-shadow:0 0 12px #22c55e}
+.p{background:#a855f7;box-shadow:0 0 12px #a855f7}
+.r{background:#ef4444;box-shadow:0 0 12px #ef4444}
+.statBox{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin:20px 0}
+.scard{background:#181818;border:1px solid #444;border-radius:16px;padding:18px;text-align:center}
+.modalLeader{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:999}
+.modalLeader .inner{background:#181818;padding:30px;border-radius:18px;text-align:center}
+.avatar{font-size:80px}.icon{font-size:42px}
+@keyframes pop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}} .leader:hover{box-shadow:0 0 25px #00bfff,0 0 40px #fff;}
 </style></head><body>
 <div id=loader><img src="logo.png"><h2>SUPER LIGA</h2><div class=bar><div class=fill></div></div></div>
 <div id=app><div class=ov>
@@ -35,6 +64,8 @@ footer{text-align:center;padding:18px;opacity:.9}
 <button onclick="sw('start')">🏠 Start</button>
 <button onclick="sw('tab')">🏆 Tabela</button>
 <button onclick="sw('term')">📅 Terminarz</button>
+<button onclick="sw('stats')">📊 Statystyki</button>
+<button onclick="sw('teams')">🛡️ Drużyny</button>
 <button onclick="modal.style.display='flex'">❌ Wyjście</button>
 </nav>
 
@@ -44,12 +75,12 @@ footer{text-align:center;padding:18px;opacity:.9}
 <h3 style="text-align:center;margin-bottom:15px">Uproszczona tabela</h3>
 <table>
 <tr><th>#</th><th>Drużyna</th><th>PKT</th></tr>
-<tr><td>1</td><td>-----</td><td>0</td></tr>
-<tr><td>2</td><td>-----</td><td>0</td></tr>
-<tr><td>3</td><td>-----</td><td>0</td></tr>
-<tr><td>4</td><td>-----</td><td>0</td></tr>
-<tr><td>5</td><td>-----</td><td>0</td></tr>
-<tr><td>6</td><td>-----</td><td>0</td></tr>
+<tr><td><span class='pos g'>1</span></td><td>-----</td><td>0</td></tr>
+<tr><td><span class='pos g'>2</span></td><td>-----</td><td>0</td></tr>
+<tr><td><span class='pos g'>3</span></td><td>-----</td><td>0</td></tr>
+<tr><td><span class='pos p'>4</span></td><td>-----</td><td>0</td></tr>
+<tr><td><span class='pos p'>5</span></td><td>-----</td><td>0</td></tr>
+<tr><td><span class='pos r'>6</span></td><td>-----</td><td>0</td></tr>
 </table>
 <div style="text-align:center;margin-top:18px"><button onclick="alert('Po opublikowaniu strony otwórz ją w Chrome na telefonie i wybierz: Dodaj do ekranu głównego.')">📱 Dodaj aplikację do telefonu</button></div>
 </div>
@@ -60,21 +91,259 @@ footer{text-align:center;padding:18px;opacity:.9}
 <h2>Tabela ligowa</h2>
 <table>
 <tr><th>#</th><th>Drużyna</th><th>M</th><th>W</th><th>R</th><th>P</th><th>GZ</th><th>GS</th><th>+/-</th><th>PKT</th></tr>
-<tr><td>1</td><td>-----</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-<tr><td>2</td><td>-----</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-<tr><td>3</td><td>-----</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-<tr><td>4</td><td>-----</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-<tr><td>5</td><td>-----</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-<tr><td>6</td><td>-----</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td><span class='pos g'>1</span></td><td>-----</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td><span class='pos g'>2</span></td><td>-----</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td><span class='pos g'>3</span></td><td>-----</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td><span class='pos p'>4</span></td><td>-----</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td><span class='pos p'>5</span></td><td>-----</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td><span class='pos r'>6</span></td><td>-----</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
 </table>
 </div></section>
 <section id=term class=page><div class=card><h2>📅 Terminarz</h2>
 <p style="text-align:center;font-size:22px;margin:30px 0;"><b>Terminarz zostanie ustalony wkrótce.</b></p>
 </div></section>
 
+
+
+
+<section id="stats" class="page"><div class="card">
+<h2 style="text-align:center">📊 Statystyki Ligi</h2>
+
+<div style="display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:22px;margin:30px 0">
+<div class="scard"><div style="font-size:42px">0</div>⚽ GOLE</div>
+<div class="scard"><div style="font-size:42px">0</div>🟨 ŻÓŁTE KARTKI</div>
+<div class="scard"><div style="font-size:42px">0</div>🟥 CZERWONE KARTKI</div>
+<div class="scard"><div style="font-size:42px">0</div>📺 INTERWENCJE VAR</div>
+<div class="scard"><div style="font-size:42px">0</div>🧤 CZYSTE KONTA</div>
+<div class="scard"><div style="font-size:42px">0</div>🔥 ŚREDNIA GOLI</div>
+</div>
+
+<h2 style="text-align:center;margin:20px 0">🏅 Statystyki Graczy</h2>
+<div class="leaders">
+<div class="leader" onclick="showLeader('Król Strzelców','pilkarz.png','⚽ 0 goli')"><h3>👑 Król Strzelców</h3></div>
+<div class="leader" onclick="showLeader('Król Asyst','pilkarz.png','🎯 0 asyst')"><h3>🎯 Król Asyst</h3></div>
+<div class="leader" onclick="showLeader('Czyste Konta','bramkarz.png','🧤 0 kont')"><h3>🧤 Czyste Konta</h3></div>
+<div class="leader" 
+<div class="leader" 
+<div class="leader" 
+<div class="leader"><h3>⏳ Wkrótce</h3></div></div></div></section>
+
+
+
+
+
+<section id="stats" class="page"><div class="card">
+<h2>📊 Statystyki ligi</h2>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin:20px 0">
+<div style="background:#1b1b1b;border-radius:14px;padding:18px;text-align:center">
+<div style="font-size:34px;font-weight:700" data-target="18">0</div>
+<div>⚽ Gole</div>
+</div>
+
+<div style="background:#1b1b1b;border-radius:14px;padding:18px;text-align:center">
+<div style="font-size:34px;font-weight:700" data-target="6">0</div>
+<div>🏟 Mecze</div>
+</div>
+
+<div style="background:#1b1b1b;border-radius:14px;padding:18px;text-align:center">
+<div style="font-size:34px;font-weight:700" data-target="2">0</div>
+<div>🟥 Kartki</div>
+</div>
+</div>
+
+<h3>👑 Król strzelców</h3>
+<table style="margin-top:10px">
+<tr><th>#</th><th>Zawodnik</th><th>Gole</th></tr>
+<tr><td>1</td><td>---</td><td>0</td></tr>
+<tr><td>2</td><td>---</td><td>0</td></tr>
+<tr><td>3</td><td>---</td><td>0</td></tr>
+</table>
+
+<h3 style="margin-top:25px">📈 Forma drużyn</h3>
+<p>⚪ ⚪ ⚪ ⚪ ⚪ (przykład – do uzupełnienia po meczach)</p>
+
+<h3 style="margin-top:25px">⚽ Ostatnie mecze</h3>
+<div style="background:#1b1b1b;padding:12px;border-radius:12px;margin-top:10px">Drużyna A 0 : 0 Drużyna B</div>
+<div style="background:#1b1b1b;padding:12px;border-radius:12px;margin-top:10px">Drużyna C 0 : 0 Drużyna D</div>
+
+</div></section>
+
+
+
+<section id="teams" class="page">
+<div class="card">
+<h2 style="text-align:center">🛡️ Drużyny</h2>
+<p style="text-align:center;opacity:.8;margin:10px 0 20px">Profile drużyn (wersja v8)</p>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
+
+<div style="background:rgba(22,22,22,.75);border:1px solid #444;border-radius:18px;padding:18px;
+transition:.25s;cursor:pointer"
+onmouseover="this.style.transform='translateY(-6px) scale(1.03)';this.style.boxShadow='0 0 18px rgba(255,255,255,.18)'"
+onmouseout="this.style.transform='';this.style.boxShadow=''"
+onclick="showTeamError()">
+<div style="width:90px;height:90px;border-radius:50%;margin:auto;background:#2c2c2c;
+display:flex;align-items:center;justify-content:center;font-size:40px">🛡️</div>
+<h3 style="text-align:center;margin-top:15px">Drużyna 1</h3>
+<hr style="margin:12px 0;border-color:#333">
+<p>⚽ Gole: 0</p>
+<p>🏆 Punkty: 0</p>
+<p>📈 Forma: ⚪ ⚪ ⚪ ⚪ ⚪</p>
+<button style="width:100%;margin-top:12px">Otwórz profil</button>
+</div>
+
+<div style="background:rgba(22,22,22,.75);border:1px solid #444;border-radius:18px;padding:18px;
+transition:.25s;cursor:pointer"
+onmouseover="this.style.transform='translateY(-6px) scale(1.03)';this.style.boxShadow='0 0 18px rgba(255,255,255,.18)'"
+onmouseout="this.style.transform='';this.style.boxShadow=''"
+onclick="showTeamError()">
+<div style="width:90px;height:90px;border-radius:50%;margin:auto;background:#2c2c2c;
+display:flex;align-items:center;justify-content:center;font-size:40px">🛡️</div>
+<h3 style="text-align:center;margin-top:15px">Drużyna 2</h3>
+<hr style="margin:12px 0;border-color:#333">
+<p>⚽ Gole: 0</p>
+<p>🏆 Punkty: 0</p>
+<p>📈 Forma: ⚪ ⚪ ⚪ ⚪ ⚪</p>
+<button style="width:100%;margin-top:12px">Otwórz profil</button>
+</div>
+
+<div style="background:rgba(22,22,22,.75);border:1px solid #444;border-radius:18px;padding:18px;
+transition:.25s;cursor:pointer"
+onmouseover="this.style.transform='translateY(-6px) scale(1.03)';this.style.boxShadow='0 0 18px rgba(255,255,255,.18)'"
+onmouseout="this.style.transform='';this.style.boxShadow=''"
+onclick="showTeamError()">
+<div style="width:90px;height:90px;border-radius:50%;margin:auto;background:#2c2c2c;
+display:flex;align-items:center;justify-content:center;font-size:40px">🛡️</div>
+<h3 style="text-align:center;margin-top:15px">Drużyna 3</h3>
+<hr style="margin:12px 0;border-color:#333">
+<p>⚽ Gole: 0</p>
+<p>🏆 Punkty: 0</p>
+<p>📈 Forma: ⚪ ⚪ ⚪ ⚪ ⚪</p>
+<button style="width:100%;margin-top:12px">Otwórz profil</button>
+</div>
+
+<div style="background:rgba(22,22,22,.75);border:1px solid #444;border-radius:18px;padding:18px;
+transition:.25s;cursor:pointer"
+onmouseover="this.style.transform='translateY(-6px) scale(1.03)';this.style.boxShadow='0 0 18px rgba(255,255,255,.18)'"
+onmouseout="this.style.transform='';this.style.boxShadow=''"
+onclick="showTeamError()">
+<div style="width:90px;height:90px;border-radius:50%;margin:auto;background:#2c2c2c;
+display:flex;align-items:center;justify-content:center;font-size:40px">🛡️</div>
+<h3 style="text-align:center;margin-top:15px">Drużyna 4</h3>
+<hr style="margin:12px 0;border-color:#333">
+<p>⚽ Gole: 0</p>
+<p>🏆 Punkty: 0</p>
+<p>📈 Forma: ⚪ ⚪ ⚪ ⚪ ⚪</p>
+<button style="width:100%;margin-top:12px">Otwórz profil</button>
+</div>
+
+<div style="background:rgba(22,22,22,.75);border:1px solid #444;border-radius:18px;padding:18px;
+transition:.25s;cursor:pointer"
+onmouseover="this.style.transform='translateY(-6px) scale(1.03)';this.style.boxShadow='0 0 18px rgba(255,255,255,.18)'"
+onmouseout="this.style.transform='';this.style.boxShadow=''"
+onclick="showTeamError()">
+<div style="width:90px;height:90px;border-radius:50%;margin:auto;background:#2c2c2c;
+display:flex;align-items:center;justify-content:center;font-size:40px">🛡️</div>
+<h3 style="text-align:center;margin-top:15px">Drużyna 5</h3>
+<hr style="margin:12px 0;border-color:#333">
+<p>⚽ Gole: 0</p>
+<p>🏆 Punkty: 0</p>
+<p>📈 Forma: ⚪ ⚪ ⚪ ⚪ ⚪</p>
+<button style="width:100%;margin-top:12px">Otwórz profil</button>
+</div>
+
+<div style="background:rgba(22,22,22,.75);border:1px solid #444;border-radius:18px;padding:18px;
+transition:.25s;cursor:pointer"
+onmouseover="this.style.transform='translateY(-6px) scale(1.03)';this.style.boxShadow='0 0 18px rgba(255,255,255,.18)'"
+onmouseout="this.style.transform='';this.style.boxShadow=''"
+onclick="showTeamError()">
+<div style="width:90px;height:90px;border-radius:50%;margin:auto;background:#2c2c2c;
+display:flex;align-items:center;justify-content:center;font-size:40px">🛡️</div>
+<h3 style="text-align:center;margin-top:15px">Drużyna 6</h3>
+<hr style="margin:12px 0;border-color:#333">
+<p>⚽ Gole: 0</p>
+<p>🏆 Punkty: 0</p>
+<p>📈 Forma: ⚪ ⚪ ⚪ ⚪ ⚪</p>
+<button style="width:100%;margin-top:12px">Otwórz profil</button>
+</div>
+</div></div></section>
 </div></div>
 <div id=modal><div class=box><h3>Czy na pewno chcesz wyjść?</h3><div class=b><button onclick="modal.style.display='none'">Nie</button><button onclick="window.close()">Tak</button></div></div></div>
 <script>
 setTimeout(()=>{loader.style.display='none';app.style.display='block';document.body.style.overflow='auto'},2600);
-function sw(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active')}
-</script></body></html>
+function sw(id){
+const cur=document.querySelector('.page.active');
+const nxt=document.getElementById(id);
+if(cur===nxt)return;
+cur.style.transition='all .35s';
+cur.style.transform='translateY(-40px)';
+cur.style.opacity='0';
+setTimeout(()=>{
+cur.classList.remove('active');
+cur.style.transform='';cur.style.opacity='';
+nxt.classList.add('active');
+nxt.animate([{transform:'translateY(40px)',opacity:0},{transform:'translateY(0)',opacity:1}],{duration:350,easing:'ease'});
+},180);
+}
+</script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('[data-target]').forEach(el=>{
+    const target=Number(el.dataset.target);
+    let n=0;
+    const step=Math.max(1,Math.ceil(target/40));
+    const timer=setInterval(()=>{
+      n+=step;
+      if(n>=target){n=target;clearInterval(timer);}
+      el.textContent=n;
+    },20);
+  });
+});
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+window.addEventListener('load',()=>{
+navigator.serviceWorker.register('sw.js').catch(()=>{});
+});
+}
+</script>
+
+<div class="modalLeader" id="leadModal"><div class="inner">
+<img id="playerImg" src="pilkarz.png" style="width:140px;height:140px;border-radius:50%;object-fit:cover;box-shadow:0 0 35px #fff;animation:pop .6s"><h2 id="lt"></h2><h3 id="lv"></h3><br><button onclick="leadModal.style.display='none'">Zamknij</button>
+</div></div>
+<script>
+function showLeader(t,img,v){
+lt.textContent=t;
+document.getElementById('playerImg').src=img;
+lv.textContent=v;
+leadModal.style.display='flex';
+document.querySelector('.inner').animate([
+{transform:'scale(.3) rotate(-15deg)',opacity:0},
+{transform:'scale(1.08)',opacity:1},
+{transform:'scale(1)',opacity:1}
+],{duration:700,easing:'cubic-bezier(.2,.9,.2,1)'});
+}
+</script>
+
+<script>
+/* v12 placeholder for player images */
+const PLAYER_IMAGE="pilkarz.png";
+const GOALKEEPER_IMAGE="bramkarz.png";
+</script>
+
+
+<div id="teamError" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center">
+<div style="background:#181818;border:1px solid #555;border-radius:18px;padding:28px;max-width:360px;text-align:center">
+<h2>❌ Error</h2>
+<p style="margin:18px 0">Brak przypisanej drużyny.</p>
+<button onclick="document.getElementById('teamError').style.display='none'">OK</button>
+</div></div>
+<script>
+function showTeamError(){
+document.getElementById('teamError').style.display='flex';
+}
+</script>
+
+</body></html>
