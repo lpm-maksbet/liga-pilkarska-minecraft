@@ -7,7 +7,7 @@
 </title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:Poppins,sans-serif;background:#000;color:#fff;overflow:hidden}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:Poppins,sans-serif;background:#000;color:#fff;overflow-x:hidden}
 #loader{position:fixed;inset:0;background:#000;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:99}
 #loader img{width:130px;animation:p 2s infinite}#loader .bar{width:260px;height:8px;background:#222;border-radius:99px;overflow:hidden;margin:20px}
 #loader .fill{height:100%;width:0;background:#fff;animation:l 2.6s forwards}
@@ -55,6 +55,26 @@ footer{text-align:center;padding:18px;opacity:.9}
 .modalLeader .inner{background:#181818;padding:30px;border-radius:18px;text-align:center}
 .avatar{font-size:80px}.icon{font-size:42px}
 @keyframes pop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}} .leader:hover{box-shadow:0 0 25px #00bfff,0 0 40px #fff;}
+
+/* === Mobile improvements === */
+html{-webkit-text-size-adjust:100%}
+img{max-width:100%;height:auto}
+.card{width:min(100%,1000px)}
+@media (max-width:768px){
+header{font-size:26px;padding:14px}
+nav{position:sticky;top:0;z-index:1000;background:rgba(0,0,0,.88);padding:10px;gap:8px}
+nav button{flex:1 1 calc(50% - 8px);font-size:14px;padding:12px 8px}
+.page{padding:12px}
+.card{padding:14px;border-radius:14px}
+.c{display:none}
+.mem h2{font-size:24px}
+.leaders{grid-template-columns:1fr}
+.statBox{grid-template-columns:1fr}
+[style*="grid-template-columns:repeat(3"]{grid-template-columns:1fr!important}
+table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap}
+.box,.modalLeader .inner{width:92%;max-width:380px}
+}
+
 </style></head><body>
 <div id=loader><img src="logo.png"><h2>SUPER LIGA</h2><div class=bar><div class=fill></div></div></div>
 <div id=app><div class=ov>
